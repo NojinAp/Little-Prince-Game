@@ -8,7 +8,7 @@ The player leaps on bricks and tries to achieve the highest score possible.
 ## Play the Game
 
 **Live Demo:**  
-https://nojinap.github.io/Little-Prince-Game/
+[Le Petit Prince Leap Game](https://nojinap.github.io/Little-Prince-Game/)
 
 ---
 
