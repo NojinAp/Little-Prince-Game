@@ -1,0 +1,39 @@
+<!--
+Author: Nozhin Azarpanah
+Date: Feb 27th, 2026
+CS 1XD3 JS Individual Assignment
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <title>Petit Prince Leap</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="startPage">
+        <h2>Petit Prince Leap</h2>
+        <button id="startButton">Play</button>
+
+        <details id="helpToggle">
+            <summary>?</summary>
+            <div id="helpPanel">
+                <h3>How to Play</h3>
+                <p>Desktop: Use Left/Right arrow keys.</p>
+                <p>Mobile: Tilt your phone to move.</p>
+                <p>Land on platforms and climb higher to increase score.</p>
+                <p>Tap || to pause, then Resume to continue.</p>
+            </div>
+        </details>
+    </div>
+
+    <canvas id="gameCanvas" width="400" height="600" style="display:none;"></canvas>
+    <button id="resumeButton" style="display:none;">Resume</button>
+    <button id="playAgainButton" style="display:none;">Play Again</button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
