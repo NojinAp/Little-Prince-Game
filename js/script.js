@@ -451,17 +451,19 @@ window.addEventListener("load", function() {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
+            const messageBaseY = gameHeight / 2 + 70;
+
             ctx.font = '30px "Betania Patmos"';
-            ctx.fillText('Game Over', gameWidth / 2, gameHeight / 2 - 52);
+            ctx.fillText('Game Over', gameWidth / 2, messageBaseY);
 
             ctx.font = '18px "Betania Patmos"';
-            ctx.fillText(`Final Score: ${score}`, gameWidth / 2, gameHeight / 2 - 12);
-            ctx.fillText(`Highest Score: ${bestScore}`, gameWidth / 2, gameHeight / 2 + 18);
+            ctx.fillText(`Final Score: ${score}`, gameWidth / 2, messageBaseY + 34);
+            ctx.fillText(`Highest Score: ${bestScore}`, gameWidth / 2, messageBaseY + 62);
 
             const statusText = isNewHighScore
                 ? 'New High Score!'
                 : `Previous Best: ${previousHighScore}`;
-            ctx.fillText(statusText, gameWidth / 2, gameHeight / 2 + 48);
+            ctx.fillText(statusText, gameWidth / 2, messageBaseY + 90);
             ctx.restore();
         }
 
