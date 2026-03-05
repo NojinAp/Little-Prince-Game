@@ -451,9 +451,9 @@ window.addEventListener("load", function() {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            const messageBaseY = gameHeight / 2 + 70;
+            const messageBaseY = gameHeight / 2 - 160;
 
-            ctx.font = '30px "Betania Patmos"';
+            ctx.font = '18px "Betania Patmos"';
             ctx.fillText('Game Over', gameWidth / 2, messageBaseY);
 
             ctx.font = '18px "Betania Patmos"';
