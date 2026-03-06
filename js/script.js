@@ -1,13 +1,18 @@
+/*
+Author: Nozhin Azarpanah
+Date: March 6, 2026
+*/
+
 window.addEventListener("load", function() {
 
     function blockBrowserZoom() {
-        document.addEventListener('wheel', (event) => {
+        document.addEventListener('wheel', function(event) {
             if (event.ctrlKey || event.metaKey) {
                 event.preventDefault();
             }
         }, { passive: false });
 
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keydown', function(event) {
             if (!(event.ctrlKey || event.metaKey)) return;
 
             if (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '0') {
@@ -15,15 +20,15 @@ window.addEventListener("load", function() {
             }
         });
 
-        document.addEventListener('gesturestart', (event) => {
+        document.addEventListener('gesturestart', function(event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gesturechange', (event) => {
+        document.addEventListener('gesturechange', function(event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gestureend', (event) => {
+        document.addEventListener('gestureend', function(event) {
             event.preventDefault();
         }, { passive: false });
     }
@@ -48,12 +53,19 @@ window.addEventListener("load", function() {
     function attachTiltListener() {
         if (tiltListenerAttached) return;
 
-        window.addEventListener('deviceorientation', (event) => {
-            const gamma = typeof event.gamma === 'number' ? event.gamma : 0;
+        window.addEventListener('deviceorientation', function(event) {
+            let gamma = 0;
+            if (typeof event.gamma === 'number') {
+                gamma = event.gamma;
+            }
             const clamped = Math.max(-20, Math.min(20, gamma));
             const normalized = clamped / 20;
             const deadzone = 0.04;
-            tiltInput = Math.abs(normalized) < deadzone ? 0 : normalized;
+            if (Math.abs(normalized) < deadzone) {
+                tiltInput = 0;
+            } else {
+                tiltInput = normalized;
+            }
         });
 
         tiltListenerAttached = true;
@@ -69,7 +81,7 @@ window.addEventListener("load", function() {
                 if (permission === 'granted') {
                     attachTiltListener();
                 }
-            } catch {
+            } catch (error) {
             }
             return;
         }
@@ -80,8 +92,11 @@ window.addEventListener("load", function() {
     function getStoredHighScore() {
         try {
             const savedValue = Number(localStorage.getItem(highScoreKey));
-            return Number.isFinite(savedValue) && savedValue > 0 ? Math.floor(savedValue) : 0;
-        } catch {
+            if (Number.isFinite(savedValue) && savedValue > 0) {
+                return Math.floor(savedValue);
+            }
+            return 0;
+        } catch (error) {
             return 0;
         }
     }
@@ -89,34 +104,34 @@ window.addEventListener("load", function() {
     function setStoredHighScore(value) {
         try {
             localStorage.setItem(highScoreKey, String(Math.max(0, Math.floor(value))));
-        } catch {
+        } catch (error) {
         }
     }
 
-    document.addEventListener('keydown', e => keys[e.key] = true);
-    document.addEventListener('keyup', e => keys[e.key] = false);
+    document.addEventListener('keydown', function(e) { keys[e.key] = true; });
+    document.addEventListener('keyup', function(e) { keys[e.key] = false; });
 
     if (playAgainButton) {
-        playAgainButton.addEventListener("click", async () => {
+        playAgainButton.addEventListener("click", async function() {
             await enableTiltControlsFromGesture();
             playAgainButton.style.display = "none";
             if (resumeButton) resumeButton.style.display = "none";
             canvas.style.display = "none";
-            startGame(() => {
+            startGame(function() {
                 canvas.style.display = "block";
             });
         });
     }
 
-    startButton.addEventListener("click", async () => {
+    startButton.addEventListener("click", async function() {
         await enableTiltControlsFromGesture();
         canvas.style.display = "none";
         if (resumeButton) resumeButton.style.display = "none";
         if (playAgainButton) playAgainButton.style.display = "none";
-        startGame(() => {
-            startPage.style.display = "none";  // hide start page when game is ready
-            canvas.style.display = "block";    // show canvas
-        });                                   // start your canvas game loop
+        startGame(function() {
+            startPage.style.display = "none";  
+            canvas.style.display = "block";    
+        });                                   
     });
 
     function startGame(onReady) {
@@ -124,7 +139,7 @@ window.addEventListener("load", function() {
         const gameWidth = 400;
         const gameHeight = 600;
 
-        // ---------------- CANVAS SETUP ----------------
+        //Canvas Setup
         function setupCanvasResolution() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = Math.floor(gameWidth * dpr);
@@ -135,11 +150,15 @@ window.addEventListener("load", function() {
         }
 
         function fitCanvasToScreen() {
-            const isPhoneViewport = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+            const isNarrowViewport = window.matchMedia('(max-width: 1024px)').matches;
 
-            if (isPhoneViewport) {
+            if (isNarrowViewport) {
                 const screenWidth = window.innerWidth;
-                const screenHeight = Math.floor(window.visualViewport?.height || window.innerHeight);
+                let viewportHeight = window.innerHeight;
+                if (window.visualViewport && typeof window.visualViewport.height === 'number') {
+                    viewportHeight = window.visualViewport.height;
+                }
+                const screenHeight = Math.floor(viewportHeight);
                 canvas.style.width = screenWidth + 'px';
                 canvas.style.height = screenHeight + 'px';
                 return;
@@ -147,7 +166,9 @@ window.addEventListener("load", function() {
 
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
-            const scale = Math.min(screenWidth / gameWidth, screenHeight / gameHeight);
+            const desktopVerticalPadding = 40;
+            const availableHeight = Math.max(1, screenHeight - desktopVerticalPadding);
+            const scale = Math.min(screenWidth / gameWidth, availableHeight / gameHeight);
             canvas.style.width = Math.floor(gameWidth * scale) + 'px';
             canvas.style.height = Math.floor(gameHeight * scale) + 'px';
         }
@@ -157,7 +178,7 @@ window.addEventListener("load", function() {
 
         window.addEventListener('resize', fitCanvasToScreen);
 
-        // ---------------- IMAGES ----------------
+        //Images
         let leftImage = new Image();
         let rightImage = new Image();
         let startBackground = new Image();
@@ -174,9 +195,9 @@ window.addEventListener("load", function() {
                 stepSound.currentTime = 0;
                 const playAttempt = stepSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(() => {});
+                    playAttempt.catch(function() {});
                 }
-            } catch {
+            } catch (error) {
             }
         }
 
@@ -185,23 +206,38 @@ window.addEventListener("load", function() {
                 fallSound.currentTime = 0;
                 const playAttempt = fallSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(() => {});
+                    playAttempt.catch(function() {});
                 }
-            } catch {
+            } catch (error) {
             }
         }
 
-        const isImageRenderable = (image) => image.complete && image.naturalWidth > 0;
+        function isImageRenderable(image) {
+            return image.complete && image.naturalWidth > 0;
+        }
 
-        // ---------------- PHYSICS ----------------
+        //Physics
         const isPhoneControls = isMobileTiltDevice();
         const phoneTiltMultiplier = 3.2;
         const phoneGravityMultiplier = 1.9;
         const phoneJumpMultiplier = Math.sqrt(phoneGravityMultiplier);
         const moveSpeed = 2.5;
-        const gravity = 0.12 * (isPhoneControls ? phoneGravityMultiplier : 1);
-        const jumpStrength = -7.5 * (isPhoneControls ? phoneJumpMultiplier : 1);
-        const maxFallSpeed = isPhoneControls ? Math.abs(jumpStrength) : 3.5;
+        let gravity = 0.12;
+        if (isPhoneControls) {
+            gravity = 0.12 * phoneGravityMultiplier;
+        }
+
+        let jumpStrength = -7.5;
+        if (isPhoneControls) {
+            jumpStrength = -7.5 * phoneJumpMultiplier;
+        }
+
+        let maxFallSpeed = 3.5;
+        if (isPhoneControls) {
+            maxFallSpeed = Math.abs(jumpStrength);
+        }
+        const landingFXBaseStrength = 6;
+        const landingFXFrameCount = 16;
         const cameraScrollFactor = 0.55;
         const landingTolerance = 1.5;
         let cameraY = 0;
@@ -213,7 +249,7 @@ window.addEventListener("load", function() {
         const previousHighScore = highScore;
         const pauseButton = { x: gameWidth - 20 - 32, y: 14, width: 32, height: 36 };
 
-        // ---------------- PRINCE ----------------
+        //Prince
         class Prince {
             constructor() {
                 this.width = 54;
@@ -226,16 +262,21 @@ window.addEventListener("load", function() {
                 this.previousY = this.y;
                 this.velocityY = 0;
                 this.landingFXFrames = 0;
-                this.maxLandingFXFrames = 16;
-                this.landingFXStrength = 6;
+                this.maxLandingFXFrames = landingFXFrameCount;
+                this.landingFXStrength = landingFXBaseStrength;
                 this.direction = 'left';
             }
 
             draw() {
-                let currentImage = this.direction === 'right' ? rightImage : leftImage;
-                let sinkPixels = this.landingFXFrames > 0
-                    ? Math.sin((1 - this.landingFXFrames / this.maxLandingFXFrames) * Math.PI) * this.landingFXStrength
-                    : 0;
+                let currentImage = leftImage;
+                if (this.direction === 'right') {
+                    currentImage = rightImage;
+                }
+
+                let sinkPixels = 0;
+                if (this.landingFXFrames > 0 && this.velocityY >= 0) {
+                    sinkPixels = Math.sin((1 - this.landingFXFrames / this.maxLandingFXFrames) * Math.PI) * this.landingFXStrength;
+                }
 
                 ctx.save();
                 ctx.imageSmoothingEnabled = true;
@@ -275,18 +316,19 @@ window.addEventListener("load", function() {
 
             jump() {
                 this.velocityY = jumpStrength;
+                this.landingFXFrames = 0;
             }
 
             playLandingFX(impactSpeed = 0) {
                 const impactRatio = Math.max(0.75, Math.min(1.8, impactSpeed / maxFallSpeed));
-                this.landingFXStrength = 6 * impactRatio;
+                this.landingFXStrength = landingFXBaseStrength * impactRatio;
                 this.landingFXFrames = this.maxLandingFXFrames;
             }
         }
 
         let prince = new Prince();
 
-        // ---------------- PLATFORM ----------------
+        //Platform
         class Platform {
             constructor(x, y, width = 80, height = 10) {
                 this.x = x;
@@ -317,7 +359,7 @@ window.addEventListener("load", function() {
             }
         }
 
-        // ---------------- BACKGROUND ----------------
+        //Background
         function drawBackground() {
             const skyHeight = gameHeight;
             const tileOverlap = 2;
@@ -343,7 +385,7 @@ window.addEventListener("load", function() {
             }
         }
 
-        // ---------------- GAME SETUP ----------------
+        //Game Setup
         let platforms = [];
         let lastJumpPlatform = null;
         let canScrollCamera = false;
@@ -365,19 +407,19 @@ window.addEventListener("load", function() {
         prince.previousY = prince.y;
         lastJumpPlatform = startPlatform;
 
-        // ---------------- HELPERS ----------------
+        //Helpers
         function movePlatformsDown(delta) {
-            platforms.forEach(p => p.y += delta);
+            platforms.forEach(function(p) { p.y += delta; });
             cameraY += delta;
             highestCameraY = Math.max(highestCameraY, cameraY);
         }
 
         function keepVisiblePlatforms() {
-            platforms = platforms.filter(p => p.y < gameHeight);
+            platforms = platforms.filter(function(p) { return p.y < gameHeight; });
         }
 
         function drawPlatforms() {
-            platforms.forEach(p => p.draw());
+            platforms.forEach(function(p) { p.draw(); });
         }
 
         function drawScore() {
@@ -406,7 +448,13 @@ window.addEventListener("load", function() {
         function togglePause() {
             if (gameOver) return;
             paused = !paused;
-            if (resumeButton) resumeButton.style.display = paused ? 'flex' : 'none';
+            if (resumeButton) {
+                if (paused) {
+                    resumeButton.style.display = 'flex';
+                } else {
+                    resumeButton.style.display = 'none';
+                }
+            }
         }
 
         function getCanvasPointFromEvent(event) {
@@ -419,7 +467,7 @@ window.addEventListener("load", function() {
             };
         }
 
-        canvas.addEventListener('click', (event) => {
+        canvas.addEventListener('click', function(event) {
             if (gameOver) return;
 
             const point = getCanvasPointFromEvent(event);
@@ -436,7 +484,7 @@ window.addEventListener("load", function() {
         });
 
         if (resumeButton) {
-            resumeButton.addEventListener('click', () => {
+            resumeButton.addEventListener('click', function() {
                 paused = false;
                 resumeButton.style.display = 'none';
             });
@@ -476,7 +524,7 @@ window.addEventListener("load", function() {
             if (playAgainButton) playAgainButton.style.display = 'flex';
         }
 
-        // ---------------- GAME LOOP ----------------
+        //Game Loop
         function gameLoop() {
             if (gameOver) return;
 
@@ -489,7 +537,10 @@ window.addEventListener("load", function() {
                 if (keys['ArrowRight']) { prince.x += moveSpeed; prince.direction = 'right'; }
 
                 if (tiltControlsReady) {
-                    const tiltMoveSpeed = moveSpeed * (isPhoneControls ? phoneTiltMultiplier : 2.0);
+                    let tiltMoveSpeed = moveSpeed * 2.0;
+                    if (isPhoneControls) {
+                        tiltMoveSpeed = moveSpeed * phoneTiltMultiplier;
+                    }
                     prince.x += tiltInput * tiltMoveSpeed;
                     if (tiltInput < -0.02) prince.direction = 'left';
                     if (tiltInput > 0.02) prince.direction = 'right';
@@ -566,27 +617,27 @@ window.addEventListener("load", function() {
             requestAnimationFrame(gameLoop);
         }
 
-        // ---------------- START GAME ----------------
+        //Start Game
         let imagesReady = 0;
         const totalImages = 4;
         let gameLoopStarted = false;
 
-        const markImageReady = () => {
+        function markImageReady() {
             imagesReady++;
             if (!gameLoopStarted && imagesReady >= totalImages) {
                 gameLoopStarted = true;
                 if (typeof onReady === 'function') onReady();
                 gameLoop();
             }
-        };
+        }
 
-        const wireImage = (image, src) => {
+        function wireImage(image, src) {
             let settled = false;
-            const settle = () => {
+            function settle() {
                 if (settled) return;
                 settled = true;
                 markImageReady();
-            };
+            }
 
             image.addEventListener('load', settle, { once: true });
             image.addEventListener('error', settle, { once: true });
@@ -594,7 +645,7 @@ window.addEventListener("load", function() {
             if (image.complete) {
                 settle();
             }
-        };
+        }
 
         wireImage(leftImage, 'images/left.png');
         wireImage(rightImage, 'images/right.png');

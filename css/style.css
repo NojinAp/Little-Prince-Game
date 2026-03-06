@@ -1,3 +1,8 @@
+/*
+Author: Nozhin Azarpanah
+Date: March 6, 2026
+*/
+
 html, body {
   margin: 0;
   padding: 0;
@@ -9,8 +14,8 @@ html, body {
 
 #startPage{
   background-image:url("../images/opening.jpg");
-  width: min(100vw, calc(100dvh * 2 / 3));
-  height: min(100dvh, calc(100vw * 3 / 2));
+  width: min(100vw, calc((100dvh - 40px) * 2 / 3));
+  height: min(calc(100dvh - 40px), calc(100vw * 3 / 2));
   aspect-ratio: 2 / 3;
   background-size: cover;
   background-position: center;
@@ -135,9 +140,11 @@ html, body {
 }
 
 body {
-  background-color: "FFF7F2";
+  background-color: black;
   width: 100vw;
   height: 100dvh;
+  padding: 20px 0;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -217,20 +224,23 @@ canvas {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   #startPage {
     width: 100vw;
+    height: 100vh;
     height: 100dvh;
     aspect-ratio: auto;
   }
 
   canvas {
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
   }
 
   body {
     width: 100%;
     height: 100%;
+    padding: 0;
   }
 }
