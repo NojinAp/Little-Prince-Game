@@ -460,10 +460,9 @@ window.addEventListener("load", function() {
             ctx.fillText(`Final Score: ${score}`, gameWidth / 2, messageBaseY + 34);
             ctx.fillText(`Highest Score: ${bestScore}`, gameWidth / 2, messageBaseY + 62);
 
-            const statusText = isNewHighScore
-                ? 'New High Score!'
-                : `Previous Best: ${previousHighScore}`;
-            ctx.fillText(statusText, gameWidth / 2, messageBaseY + 90);
+            if (isNewHighScore) {
+                ctx.fillText('New High Score!', gameWidth / 2, messageBaseY + 90);
+            }
             ctx.restore();
         }
 
