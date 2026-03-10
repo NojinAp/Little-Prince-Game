@@ -37,6 +37,7 @@ window.addEventListener("load", function() {
 
     const startPage = document.getElementById("startPage");
     const startButton = document.getElementById("startButton");
+    const startButtonRevealDelayMs = 900;
     const canvas = document.getElementById("gameCanvas");
     const resumeButton = document.getElementById("resumeButton");
     const playAgainButton = document.getElementById("playAgainButton");
@@ -121,6 +122,12 @@ window.addEventListener("load", function() {
                 canvas.style.display = "block";
             });
         });
+    }
+
+    if (startButton) {
+        window.setTimeout(function() {
+            startButton.classList.add("is-visible");
+        }, startButtonRevealDelayMs);
     }
 
     startButton.addEventListener("click", async function() {
