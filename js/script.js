@@ -1,6 +1,7 @@
 /*
 Author: Nozhin Azarpanah
-Date: March 6, 2026
+Date: March 10, 2026
+JS Individual Assignment
 */
 
 window.addEventListener("load", function() {
