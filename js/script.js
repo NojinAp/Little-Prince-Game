@@ -81,7 +81,7 @@ window.addEventListener("load", function () {
             if (Math.abs(normalized) < deadzone) {
                 tiltInput = 0;
             } else {
-                    tiltInput = isMobileTiltDevice() ? -normalized : normalized;
+                    tiltInput = normalized;
             }
         });
 
