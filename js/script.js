@@ -6,6 +6,11 @@ JS Individual Assignment
 
 window.addEventListener("load", function() {
 
+    /**
+     * Prevents browser zooming via keyboard, mouse wheel, or gestures.
+     * No parameters.
+     * No return value.
+     */
     function blockBrowserZoom() {
         document.addEventListener('wheel', function(event) {
             if (event.ctrlKey || event.metaKey) {
@@ -48,10 +53,20 @@ window.addEventListener("load", function() {
     let tiltControlsReady = false;
     let tiltListenerAttached = false;
 
+    /**
+     * Detects if the device is a mobile device with tilt controls.
+     * No parameters.
+     * @returns {boolean} True if device supports tilt controls, false otherwise.
+     */
     function isMobileTiltDevice() {
         return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     }
 
+    /**
+     * Attaches a listener for device orientation events to enable tilt controls.
+     * No parameters.
+     * No return value.
+     */
     function attachTiltListener() {
         if (tiltListenerAttached) return;
 
@@ -74,6 +89,11 @@ window.addEventListener("load", function() {
         tiltControlsReady = true;
     }
 
+    /**
+     * Requests permission for device orientation events on iOS and attaches tilt listener if granted.
+     * No parameters.
+     * No return value.
+     */
     async function enableTiltControlsFromGesture() {
         if (!isMobileTiltDevice()) return;
 
@@ -91,6 +111,11 @@ window.addEventListener("load", function() {
         attachTiltListener();
     }
 
+    /**
+     * Retrieves the stored high score from localStorage.
+     * No parameters.
+     * @returns {number} The stored high score (integer), or 0 if not found.
+     */
     function getStoredHighScore() {
         try {
             const savedValue = Number(localStorage.getItem(highScoreKey));
@@ -103,6 +128,11 @@ window.addEventListener("load", function() {
         }
     }
 
+    /**
+     * Stores the high score in localStorage.
+     * @param {number} value - The score to store (integer).
+     * No return value.
+     */
     function setStoredHighScore(value) {
         try {
             localStorage.setItem(highScoreKey, String(Math.max(0, Math.floor(value))));
@@ -148,6 +178,11 @@ window.addEventListener("load", function() {
         const gameHeight = 600;
 
         //Canvas Setup
+        /**
+         * Sets up the canvas resolution and scaling for high-DPI screens.
+         * No parameters.
+         * No return value.
+         */
         function setupCanvasResolution() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = Math.floor(gameWidth * dpr);
@@ -157,6 +192,11 @@ window.addEventListener("load", function() {
             ctx.imageSmoothingQuality = 'high';
         }
 
+        /**
+         * Adjusts the canvas size to fit the screen or viewport.
+         * No parameters.
+         * No return value.
+         */
         function fitCanvasToScreen() {
             const isNarrowViewport = window.matchMedia('(max-width: 1024px)').matches;
 
@@ -198,6 +238,11 @@ window.addEventListener("load", function() {
         fallSound.preload = 'auto';
         fallSound.volume = 0.9;
 
+        /**
+         * Plays the step sound effect.
+         * No parameters.
+         * No return value.
+         */
         function playStepSound() {
             try {
                 stepSound.currentTime = 0;
@@ -209,6 +254,11 @@ window.addEventListener("load", function() {
             }
         }
 
+        /**
+         * Plays the fall sound effect.
+         * No parameters.
+         * No return value.
+         */
         function playFallSound() {
             try {
                 fallSound.currentTime = 0;
@@ -220,6 +270,11 @@ window.addEventListener("load", function() {
             }
         }
 
+        /**
+         * Checks if an image is loaded and renderable.
+         * @param {HTMLImageElement} image - The image to check.
+         * @returns {boolean} True if image is loaded and has width, false otherwise.
+         */
         function isImageRenderable(image) {
             return image.complete && image.naturalWidth > 0;
         }
@@ -416,20 +471,40 @@ window.addEventListener("load", function() {
         lastJumpPlatform = startPlatform;
 
         //Helpers
+        /**
+         * Moves all platforms and camera down by a given amount.
+         * @param {number} delta - Amount to move (float).
+         * No return value.
+         */
         function movePlatformsDown(delta) {
             platforms.forEach(function(p) { p.y += delta; });
             cameraY += delta;
             highestCameraY = Math.max(highestCameraY, cameraY);
         }
 
+        /**
+         * Removes platforms that are no longer visible on screen.
+         * No parameters.
+         * No return value.
+         */
         function keepVisiblePlatforms() {
             platforms = platforms.filter(function(p) { return p.y < gameHeight; });
         }
 
+        /**
+         * Draws all platforms on the canvas.
+         * No parameters.
+         * No return value.
+         */
         function drawPlatforms() {
             platforms.forEach(function(p) { p.draw(); });
         }
 
+        /**
+         * Draws the current and highest score on the canvas.
+         * No parameters.
+         * No return value.
+         */
         function drawScore() {
             const score = Math.floor(highestCameraY);
             highScore = Math.max(highScore, score);
@@ -443,6 +518,11 @@ window.addEventListener("load", function() {
             ctx.restore();
         }
 
+        /**
+         * Draws the pause button on the canvas.
+         * No parameters.
+         * No return value.
+         */
         function drawPauseButton() {
             ctx.save();
             ctx.fillStyle = 'rgb(255, 197, 104)';
@@ -453,6 +533,11 @@ window.addEventListener("load", function() {
             ctx.restore();
         }
 
+        /**
+         * Toggles the paused state of the game and shows/hides resume button.
+         * No parameters.
+         * No return value.
+         */
         function togglePause() {
             if (gameOver) return;
             paused = !paused;
@@ -465,6 +550,11 @@ window.addEventListener("load", function() {
             }
         }
 
+        /**
+         * Converts a mouse event to canvas coordinates.
+         * @param {MouseEvent} event - The mouse event.
+         * @returns {object} x and y coordinates relative to the canvas.
+         */
         function getCanvasPointFromEvent(event) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = gameWidth / rect.width;
@@ -498,6 +588,13 @@ window.addEventListener("load", function() {
             });
         }
 
+        /**
+         * Draws the final game over message and scores.
+         * @param {number} score - Final score (int).
+         * @param {number} bestScore - Highest score (int).
+         * @param {boolean} isNewHighScore - True if new high score.
+         * No return value.
+         */
         function drawFinalMessage(score, bestScore, isNewHighScore) {
             ctx.save();
             ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
@@ -522,6 +619,11 @@ window.addEventListener("load", function() {
             ctx.restore();
         }
 
+        /**
+         * Ends the game, updates high score, and shows game over message.
+         * No parameters.
+         * No return value.
+         */
         function endGame() {
             gameOver = true;
             const finalScore = Math.floor(highestCameraY);
@@ -533,6 +635,11 @@ window.addEventListener("load", function() {
         }
 
         //Game Loop
+        /**
+         * Main game loop. Updates game state and draws each frame.
+         * No parameters.
+         * No return value.
+         */
         function gameLoop() {
             if (gameOver) return;
 
@@ -630,6 +737,11 @@ window.addEventListener("load", function() {
         const totalImages = 4;
         let gameLoopStarted = false;
 
+        /**
+         * Marks an image as loaded and starts the game loop when all images are ready.
+         * No parameters.
+         * No return value.
+         */
         function markImageReady() {
             imagesReady++;
             if (!gameLoopStarted && imagesReady >= totalImages) {
@@ -639,6 +751,12 @@ window.addEventListener("load", function() {
             }
         }
 
+        /**
+         * Sets up image loading and marks image as ready when loaded or errored.
+         * @param {HTMLImageElement} image - The image element.
+         * @param {string} src - The image source path.
+         * No return value.
+         */
         function wireImage(image, src) {
             let settled = false;
             function settle() {
