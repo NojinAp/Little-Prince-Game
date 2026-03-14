@@ -4,7 +4,7 @@ Date: March 10, 2026
 JS Individual Assignment
 */
 
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
 
     /**
      * Prevents browser zooming via keyboard, mouse wheel, or gestures.
@@ -12,13 +12,13 @@ window.addEventListener("load", function () {
      * No return value.
      */
     function blockBrowserZoom() {
-        document.addEventListener('wheel', function (event) {
+        document.addEventListener('wheel', function(event) {
             if (event.ctrlKey || event.metaKey) {
                 event.preventDefault();
             }
         }, { passive: false });
 
-        document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function(event) {
             if (!(event.ctrlKey || event.metaKey)) return;
 
             if (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '0') {
@@ -26,15 +26,15 @@ window.addEventListener("load", function () {
             }
         });
 
-        document.addEventListener('gesturestart', function (event) {
+        document.addEventListener('gesturestart', function(event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gesturechange', function (event) {
+        document.addEventListener('gesturechange', function(event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gestureend', function (event) {
+        document.addEventListener('gestureend', function(event) {
             event.preventDefault();
         }, { passive: false });
     }
@@ -70,7 +70,7 @@ window.addEventListener("load", function () {
     function attachTiltListener() {
         if (tiltListenerAttached) return;
 
-        window.addEventListener('deviceorientation', function (event) {
+        window.addEventListener('deviceorientation', function(event) {
             let gamma = 0;
             if (typeof event.gamma === 'number') {
                 gamma = event.gamma;
@@ -81,8 +81,7 @@ window.addEventListener("load", function () {
             if (Math.abs(normalized) < deadzone) {
                 tiltInput = 0;
             } else {
-                // Invert for mobile tilt devices so tilting left moves left
-                tiltInput = isMobileTiltDevice() ? -normalized : normalized;
+                    tiltInput = isMobileTiltDevice() ? normalized : normalized;
             }
         });
 
@@ -141,36 +140,36 @@ window.addEventListener("load", function () {
         }
     }
 
-    document.addEventListener('keydown', function (e) { keys[e.key] = true; });
-    document.addEventListener('keyup', function (e) { keys[e.key] = false; });
+    document.addEventListener('keydown', function(e) { keys[e.key] = true; });
+    document.addEventListener('keyup', function(e) { keys[e.key] = false; });
 
     if (playAgainButton) {
-        playAgainButton.addEventListener("click", async function () {
+        playAgainButton.addEventListener("click", async function() {
             await enableTiltControlsFromGesture();
             playAgainButton.style.display = "none";
             if (resumeButton) resumeButton.style.display = "none";
             canvas.style.display = "none";
-            startGame(function () {
+            startGame(function() {
                 canvas.style.display = "block";
             });
         });
     }
 
     if (startButton) {
-        window.setTimeout(function () {
+        window.setTimeout(function() {
             startButton.classList.add("is-visible");
         }, startButtonRevealDelayMs);
     }
 
-    startButton.addEventListener("click", async function () {
+    startButton.addEventListener("click", async function() {
         await enableTiltControlsFromGesture();
         canvas.style.display = "none";
         if (resumeButton) resumeButton.style.display = "none";
         if (playAgainButton) playAgainButton.style.display = "none";
-        startGame(function () {
-            startPage.style.display = "none";
-            canvas.style.display = "block";
-        });
+        startGame(function() {
+            startPage.style.display = "none";  
+            canvas.style.display = "block";    
+        });                                   
     });
 
     function startGame(onReady) {
@@ -199,17 +198,25 @@ window.addEventListener("load", function () {
          * No return value.
          */
         function fitCanvasToScreen() {
-            const screenWidth = window.innerWidth;
-            let viewportHeight = window.innerHeight;
-            if (window.visualViewport && typeof window.visualViewport.height === 'number') {
-                viewportHeight = window.visualViewport.height;
+            const isNarrowViewport = window.matchMedia('(max-width: 1024px)').matches;
+
+            if (isNarrowViewport) {
+                const screenWidth = window.innerWidth;
+                let viewportHeight = window.innerHeight;
+                if (window.visualViewport && typeof window.visualViewport.height === 'number') {
+                    viewportHeight = window.visualViewport.height;
+                }
+                const screenHeight = Math.floor(viewportHeight);
+                canvas.style.width = screenWidth + 'px';
+                canvas.style.height = screenHeight + 'px';
+                return;
             }
 
-            const availableWidth = screenWidth;
-            const availableHeight = viewportHeight - 40; // optional padding
-
-            const scale = Math.min(availableWidth / gameWidth, availableHeight / gameHeight);
-
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const desktopVerticalPadding = 40;
+            const availableHeight = Math.max(1, screenHeight - desktopVerticalPadding);
+            const scale = Math.min(screenWidth / gameWidth, availableHeight / gameHeight);
             canvas.style.width = Math.floor(gameWidth * scale) + 'px';
             canvas.style.height = Math.floor(gameHeight * scale) + 'px';
         }
@@ -241,7 +248,7 @@ window.addEventListener("load", function () {
                 stepSound.currentTime = 0;
                 const playAttempt = stepSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(function () { });
+                    playAttempt.catch(function() {});
                 }
             } catch (error) {
             }
@@ -257,7 +264,7 @@ window.addEventListener("load", function () {
                 fallSound.currentTime = 0;
                 const playAttempt = fallSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(function () { });
+                    playAttempt.catch(function() {});
                 }
             } catch (error) {
             }
@@ -470,7 +477,7 @@ window.addEventListener("load", function () {
          * No return value.
          */
         function movePlatformsDown(delta) {
-            platforms.forEach(function (p) { p.y += delta; });
+            platforms.forEach(function(p) { p.y += delta; });
             cameraY += delta;
             highestCameraY = Math.max(highestCameraY, cameraY);
         }
@@ -481,7 +488,7 @@ window.addEventListener("load", function () {
          * No return value.
          */
         function keepVisiblePlatforms() {
-            platforms = platforms.filter(function (p) { return p.y < gameHeight; });
+            platforms = platforms.filter(function(p) { return p.y < gameHeight; });
         }
 
         /**
@@ -490,7 +497,7 @@ window.addEventListener("load", function () {
          * No return value.
          */
         function drawPlatforms() {
-            platforms.forEach(function (p) { p.draw(); });
+            platforms.forEach(function(p) { p.draw(); });
         }
 
         /**
@@ -558,7 +565,7 @@ window.addEventListener("load", function () {
             };
         }
 
-        canvas.addEventListener('click', function (event) {
+        canvas.addEventListener('click', function(event) {
             if (gameOver) return;
 
             const point = getCanvasPointFromEvent(event);
@@ -575,7 +582,7 @@ window.addEventListener("load", function () {
         });
 
         if (resumeButton) {
-            resumeButton.addEventListener('click', function () {
+            resumeButton.addEventListener('click', function() {
                 paused = false;
                 resumeButton.style.display = 'none';
             });

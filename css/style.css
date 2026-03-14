@@ -231,6 +231,7 @@ canvas {
   font-family: "Betania Patmos", cursive;
   font-size: 28px;
   z-index: 9999;
+  padding: 5px;
 }
 
 @media (hover: none) and (pointer: coarse) {
