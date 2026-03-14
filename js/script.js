@@ -198,7 +198,7 @@ window.addEventListener("load", function () {
          * No return value.
          */
         function fitCanvasToScreen() {
-            const isNarrowViewport = window.matchMedia('(max-width: 600px)').matches;
+            const isNarrowViewport = window.matchMedia('(max-width: 400px)').matches;
 
             if (isNarrowViewport) {
                 const screenWidth = window.innerWidth;
