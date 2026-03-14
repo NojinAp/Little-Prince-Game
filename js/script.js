@@ -732,6 +732,19 @@ window.addEventListener("load", function() {
             requestAnimationFrame(gameLoop);
         }
 
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingText = document.getElementById('loadingText');
+        let dotCount = 0;
+        let loadingInterval;
+
+        if (loadingScreen) loadingScreen.style.display = 'flex';
+
+        // Animate dots
+        loadingInterval = setInterval(() => {
+            dotCount = (dotCount + 1) % 4; // 0,1,2,3
+            loadingText.textContent = 'Loading' + '.'.repeat(dotCount);
+        }, 500);
+
         //Start Game
         let imagesReady = 0;
         const totalImages = 4;
@@ -746,6 +759,9 @@ window.addEventListener("load", function() {
             imagesReady++;
             if (!gameLoopStarted && imagesReady >= totalImages) {
                 gameLoopStarted = true;
+                // stop loading animation
+                if (loadingInterval) clearInterval(loadingInterval);
+                if (loadingScreen) loadingScreen.style.display = 'none';
                 if (typeof onReady === 'function') onReady();
                 gameLoop();
             }

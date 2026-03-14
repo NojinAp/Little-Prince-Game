@@ -217,6 +217,22 @@ canvas {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+#loadingScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: rgb(255, 197, 104);
+  font-family: "Betania Patmos", cursive;
+  font-size: 28px;
+  z-index: 9999;
+}
+
 @media (hover: none) and (pointer: coarse) {
   #playAgainButton,
   #resumeButton {
