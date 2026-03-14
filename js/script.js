@@ -4,16 +4,16 @@ Date: March 10, 2026
 JS Individual Assignment
 */
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
 
     function blockBrowserZoom() {
-        document.addEventListener('wheel', function(event) {
+        document.addEventListener('wheel', function (event) {
             if (event.ctrlKey || event.metaKey) {
                 event.preventDefault();
             }
         }, { passive: false });
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (!(event.ctrlKey || event.metaKey)) return;
 
             if (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '0') {
@@ -21,15 +21,15 @@ window.addEventListener("load", function() {
             }
         });
 
-        document.addEventListener('gesturestart', function(event) {
+        document.addEventListener('gesturestart', function (event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gesturechange', function(event) {
+        document.addEventListener('gesturechange', function (event) {
             event.preventDefault();
         }, { passive: false });
 
-        document.addEventListener('gestureend', function(event) {
+        document.addEventListener('gestureend', function (event) {
             event.preventDefault();
         }, { passive: false });
     }
@@ -55,7 +55,7 @@ window.addEventListener("load", function() {
     function attachTiltListener() {
         if (tiltListenerAttached) return;
 
-        window.addEventListener('deviceorientation', function(event) {
+        window.addEventListener('deviceorientation', function (event) {
             let gamma = 0;
             if (typeof event.gamma === 'number') {
                 gamma = event.gamma;
@@ -110,36 +110,36 @@ window.addEventListener("load", function() {
         }
     }
 
-    document.addEventListener('keydown', function(e) { keys[e.key] = true; });
-    document.addEventListener('keyup', function(e) { keys[e.key] = false; });
+    document.addEventListener('keydown', function (e) { keys[e.key] = true; });
+    document.addEventListener('keyup', function (e) { keys[e.key] = false; });
 
     if (playAgainButton) {
-        playAgainButton.addEventListener("click", async function() {
+        playAgainButton.addEventListener("click", async function () {
             await enableTiltControlsFromGesture();
             playAgainButton.style.display = "none";
             if (resumeButton) resumeButton.style.display = "none";
             canvas.style.display = "none";
-            startGame(function() {
+            startGame(function () {
                 canvas.style.display = "block";
             });
         });
     }
 
     if (startButton) {
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             startButton.classList.add("is-visible");
         }, startButtonRevealDelayMs);
     }
 
-    startButton.addEventListener("click", async function() {
+    startButton.addEventListener("click", async function () {
         await enableTiltControlsFromGesture();
         canvas.style.display = "none";
         if (resumeButton) resumeButton.style.display = "none";
         if (playAgainButton) playAgainButton.style.display = "none";
-        startGame(function() {
-            startPage.style.display = "none";  
-            canvas.style.display = "block";    
-        });                                   
+        startGame(function () {
+            startPage.style.display = "none";
+            canvas.style.display = "block";
+        });
     });
 
     function startGame(onReady) {
@@ -203,7 +203,7 @@ window.addEventListener("load", function() {
                 stepSound.currentTime = 0;
                 const playAttempt = stepSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(function() {});
+                    playAttempt.catch(function () { });
                 }
             } catch (error) {
             }
@@ -214,7 +214,7 @@ window.addEventListener("load", function() {
                 fallSound.currentTime = 0;
                 const playAttempt = fallSound.play();
                 if (playAttempt && typeof playAttempt.catch === 'function') {
-                    playAttempt.catch(function() {});
+                    playAttempt.catch(function () { });
                 }
             } catch (error) {
             }
@@ -417,17 +417,17 @@ window.addEventListener("load", function() {
 
         //Helpers
         function movePlatformsDown(delta) {
-            platforms.forEach(function(p) { p.y += delta; });
+            platforms.forEach(function (p) { p.y += delta; });
             cameraY += delta;
             highestCameraY = Math.max(highestCameraY, cameraY);
         }
 
         function keepVisiblePlatforms() {
-            platforms = platforms.filter(function(p) { return p.y < gameHeight; });
+            platforms = platforms.filter(function (p) { return p.y < gameHeight; });
         }
 
         function drawPlatforms() {
-            platforms.forEach(function(p) { p.draw(); });
+            platforms.forEach(function (p) { p.draw(); });
         }
 
         function drawScore() {
@@ -475,7 +475,7 @@ window.addEventListener("load", function() {
             };
         }
 
-        canvas.addEventListener('click', function(event) {
+        canvas.addEventListener('click', function (event) {
             if (gameOver) return;
 
             const point = getCanvasPointFromEvent(event);
@@ -492,7 +492,7 @@ window.addEventListener("load", function() {
         });
 
         if (resumeButton) {
-            resumeButton.addEventListener('click', function() {
+            resumeButton.addEventListener('click', function () {
                 paused = false;
                 resumeButton.style.display = 'none';
             });
@@ -625,6 +625,19 @@ window.addEventListener("load", function() {
             requestAnimationFrame(gameLoop);
         }
 
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingText = document.getElementById('loadingText');
+        let dotCount = 0;
+        let loadingInterval;
+
+        if (loadingScreen) loadingScreen.style.display = 'flex';
+
+        // Animate dots
+        loadingInterval = setInterval(() => {
+            dotCount = (dotCount + 1) % 4; // 0,1,2,3
+            loadingText.textContent = 'Loading' + '.'.repeat(dotCount);
+        }, 500);
+
         //Start Game
         let imagesReady = 0;
         const totalImages = 4;
@@ -634,6 +647,9 @@ window.addEventListener("load", function() {
             imagesReady++;
             if (!gameLoopStarted && imagesReady >= totalImages) {
                 gameLoopStarted = true;
+                // stop loading animation
+                if (loadingInterval) clearInterval(loadingInterval);
+                if (loadingScreen) loadingScreen.style.display = 'none';
                 if (typeof onReady === 'function') onReady();
                 gameLoop();
             }
