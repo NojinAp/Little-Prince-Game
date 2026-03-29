@@ -144,6 +144,11 @@ window.addEventListener("load", function () {
         });
     });
 
+    /**
+     * Initializes and starts the game loop with canvas setup and event listeners.
+     * @param {function} onReady - Callback function to execute when game is ready.
+     * No return value.
+     */
     function startGame(onReady) {
         const ctx = canvas.getContext('2d');
         const gameWidth = 400;

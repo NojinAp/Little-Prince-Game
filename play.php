@@ -5,45 +5,45 @@ Server-side Assignment
 -->
 
 <?php
-$userEmail = filter_input(INPUT_GET, "email", FILTER_VALIDATE_EMAIL);
-if (!$userEmail) {
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&family=Cormorant+Garamond&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Petit Prince Leap</title>
-</head>
-<body>
-    <div id="messagePage">
-        <h2 class="title">Petit Prince Leap</h2>
-        <p id="messageText">Session expired or invalid access.</p>
-        <div class="linkGroup">
-            <a href="index.php">Sign In Again</a>
+    $userEmail = filter_input(INPUT_GET, "email", FILTER_VALIDATE_EMAIL);
+    if (!$userEmail) {
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="images/icon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&family=Cormorant+Garamond&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Petit Prince Leap</title>
+    </head>
+    <body>
+        <div id="messagePage">
+            <h2 class="title">Petit Prince Leap</h2>
+            <p id="messageText">Session expired or invalid access.</p>
+            <div class="linkGroup">
+                <a href="index.php">Sign In Again</a>
+            </div>
         </div>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
 <?php
     exit;
 }
 
 try {
-    $dbh = new PDO("mysql:host=localhost;dbname=Animation Game", "root", "");
-    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (Exception $e) {
-    die($e->getMessage());
+    $dbh = new PDO("mysql:host=localhost;dbname=azarpann_db", "azarpann_local", "W{u94OMW");
+} catch(Exception $e) {
+    die ($e->getMessage());
 }
 
 $stmt = $dbh->prepare("SELECT MAX(score) AS bestScore FROM Results WHERE email = ?");
 $stmt->execute([$userEmail]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$row = $stmt->fetch();
 
 $userBestScore = 0;
+
 if ($row && $row["bestScore"] !== null) {
     $userBestScore = (int)$row["bestScore"];
 }

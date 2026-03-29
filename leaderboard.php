@@ -35,10 +35,9 @@ if (!$userEmail) {
 }
 
 try {
-    $dbh = new PDO("mysql:host=localhost;dbname=Animation Game", "root", "");
-    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (Exception $e) {
-    die($e->getMessage());
+    $dbh = new PDO("mysql:host=localhost;dbname=azarpann_db", "azarpann_local", "W{u94OMW");
+} catch(Exception $e) {
+    die ($e->getMessage());
 }
 
 if ($userScore !== null && $userScore !== false) {

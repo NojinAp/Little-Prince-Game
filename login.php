@@ -12,10 +12,9 @@ Server-side Assignment
     $errorMessage = "";
 
     try {
-        $dbh = new PDO("mysql:host=localhost;dbname=Animation Game", "root", "");
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (Exception $e) {
-        die($e->getMessage());
+        $dbh = new PDO("mysql:host=localhost;dbname=azarpann_db", "azarpann_local", "W{u94OMW");
+    } catch(Exception $e) {
+        die ($e->getMessage());
     }
 
     if ($createUser) {
@@ -76,17 +75,17 @@ Server-side Assignment
 
         $stmt = $dbh->prepare("SELECT * FROM Players WHERE email = ? AND birthday = ?");
         $stmt->execute([$userEmail, $userBirthday]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch();
 
         if ($row) {
             echo '<p id="messageText">Welcome back!</p>';
             echo '<div class="linkGroup">';
-            echo '<a href="play.php?email=' . urlencode($userEmail) . '">Begin</a>';
+            echo '<a href="play.php?email=' . urlencode($userEmail) . '" class="beginBtn">Begin</a>';
             echo '</div>';
         } else {
             $stmt = $dbh->prepare("SELECT * FROM Players WHERE email = ?");
             $stmt->execute([$userEmail]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $row = $stmt->fetch();
 
             if ($row) {
                 echo '<p id="messageText">This email is already taken.</p>';

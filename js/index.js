@@ -11,6 +11,11 @@ window.addEventListener("load", function () {
     const nicknameInput = document.getElementById("nickname");
     const error = document.getElementById("error");
 
+    /**
+     * Validates if an email address has a proper format.
+     * @param {string} email - The email address to validate.
+     * @returns {boolean} True if email is valid, false otherwise.
+     */
     function validateEmail(email) {
         const atIndex = email.indexOf("@");
         const dotIndex = email.lastIndexOf(".");
@@ -22,6 +27,11 @@ window.addEventListener("load", function () {
         );
     }
 
+    /**
+     * Validates if a birthday date is valid and not in the future.
+     * @param {string} birthday - The birthday date in string format.
+     * @returns {boolean} True if birthday is valid, false otherwise.
+     */
     function validateBirthday(birthday) {
         const date = new Date(birthday);
 
@@ -37,6 +47,11 @@ window.addEventListener("load", function () {
         return true;
     }
 
+    /**
+     * Validates if a nickname is not empty.
+     * @param {string} nickname - The nickname to validate.
+     * @returns {boolean} True if nickname is not empty, false otherwise.
+     */
     function validateNickname(nickname) {
         return nickname.trim() !== "";
     }

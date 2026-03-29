@@ -423,10 +423,10 @@ canvas {
 
 #messagePage a {
   font-family: "Betania Patmos", cursive;
-  font-size: 18px;
   padding: 10px 20px;
-  min-width: 290px;
-  height: 44px;
+  min-width: clamp(180px, 65vw, 260px);
+  height: clamp(38px, 5.5vh, 44px);
+  font-size: clamp(14px, 3.5vw, 17px);
   border-radius: 999px;
   border: none;
   padding: 0;
@@ -451,11 +451,19 @@ canvas {
   transform: scale(0.98);
 }
 
+#messagePage a.beginBtn {
+  width: 140px;
+  min-width: 140px;
+  height: 38px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
 .linkGroup {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: clamp(12px, 3vw, 24px);
 }
 
 .userStats {
@@ -482,7 +490,7 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
 }
 
 .playerNickname {
@@ -502,7 +510,7 @@ canvas {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  margin-bottom: 40px;
+  margin-bottom: clamp(16px, 4vw, 40px);
 }
 
 .sectionTitle {
@@ -520,12 +528,8 @@ canvas {
 #nicknameForm input:-webkit-autofill:focus,
 #nicknameForm input:-webkit-autofill:active {
   -webkit-text-fill-color: rgb(255, 197, 104) !important;
-  -webkit-box-shadow:
-    0 0 0 1000px rgb(15, 15, 31) inset,
-    0 6px 12px rgba(255, 197, 104, 0.3) !important;
-  box-shadow:
-    0 0 0 1000px rgb(15, 15, 31) inset,
-    0 6px 12px rgba(255, 197, 104, 0.3) !important;
+  -webkit-box-shadow: 0 0 0 1000px rgb(15, 15, 31) inset !important;
+  box-shadow: 0 0 0 1000px rgb(15, 15, 31) inset !important;
   caret-color: rgb(255, 197, 104);
   border-radius: 999px;
   transition: background-color 9999s ease-out 0s;
@@ -547,16 +551,25 @@ canvas {
   #resumeButton:hover,
   #resumeButton:active,
   #leaderboardButton:hover,
-  #leaderboardButton:active,
+  #leaderboardButton:active {
+    transform: translate(-50%, -50%);
+  }
+
+  #startButton:hover,
+  #startButton:active {
+    transform: translate(-50%, -50%);
+  }
+
   #formContainer button:hover,
   #formContainer button:active,
-  #startButton:hover,
-  #startButton:active,
   #messagePage a:hover,
   #messagePage a:active {
-    transform: translate(-50%, -50%);
-    box-shadow: 0 10px 18px rgb(255, 197, 104);
-    filter: none;
+    transform: none;
+  }
+
+  #formContainer input,
+  #nicknameForm input {
+    box-shadow: none;
   }
 }
 
