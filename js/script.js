@@ -1,11 +1,10 @@
 /*
 Author: Nozhin Azarpanah
 Date: March 14, 2026
-JS Individual Assignment
+Server-side Assignment
 */
 
 window.addEventListener("load", function () {
-
     /**
      * Prevents browser zooming via keyboard, mouse wheel, or gestures.
      * No parameters.
@@ -47,7 +46,7 @@ window.addEventListener("load", function () {
     const canvas = document.getElementById("gameCanvas");
     const resumeButton = document.getElementById("resumeButton");
     const playAgainButton = document.getElementById("playAgainButton");
-    const highScoreKey = "petitPrinceLeapHighScore";
+    const leaderboardButton = document.getElementById("leaderboardButton");
     let keys = {};
     let tiltInput = 0;
     let tiltControlsReady = false;
@@ -81,7 +80,7 @@ window.addEventListener("load", function () {
             if (Math.abs(normalized) < deadzone) {
                 tiltInput = 0;
             } else {
-                    tiltInput = normalized;
+                tiltInput = normalized;
             }
         });
 
@@ -111,35 +110,6 @@ window.addEventListener("load", function () {
         attachTiltListener();
     }
 
-    /**
-     * Retrieves the stored high score from localStorage.
-     * No parameters.
-     * @returns {number} The stored high score (integer), or 0 if not found.
-     */
-    function getStoredHighScore() {
-        try {
-            const savedValue = Number(localStorage.getItem(highScoreKey));
-            if (Number.isFinite(savedValue) && savedValue > 0) {
-                return Math.floor(savedValue);
-            }
-            return 0;
-        } catch (error) {
-            return 0;
-        }
-    }
-
-    /**
-     * Stores the high score in localStorage.
-     * @param {number} value - The score to store (integer).
-     * No return value.
-     */
-    function setStoredHighScore(value) {
-        try {
-            localStorage.setItem(highScoreKey, String(Math.max(0, Math.floor(value))));
-        } catch (error) {
-        }
-    }
-
     document.addEventListener('keydown', function (e) { keys[e.key] = true; });
     document.addEventListener('keyup', function (e) { keys[e.key] = false; });
 
@@ -147,6 +117,7 @@ window.addEventListener("load", function () {
         playAgainButton.addEventListener("click", async function () {
             await enableTiltControlsFromGesture();
             playAgainButton.style.display = "none";
+            if (leaderboardButton) leaderboardButton.style.display = "none";
             if (resumeButton) resumeButton.style.display = "none";
             canvas.style.display = "none";
             startGame(function () {
@@ -165,6 +136,7 @@ window.addEventListener("load", function () {
         await enableTiltControlsFromGesture();
         canvas.style.display = "none";
         if (resumeButton) resumeButton.style.display = "none";
+        if (leaderboardButton) leaderboardButton.style.display = "none";
         if (playAgainButton) playAgainButton.style.display = "none";
         startGame(function () {
             startPage.style.display = "none";
@@ -226,7 +198,6 @@ window.addEventListener("load", function () {
 
         window.addEventListener('resize', fitCanvasToScreen);
 
-        //Images
         let leftImage = new Image();
         let rightImage = new Image();
         let startBackground = new Image();
@@ -279,7 +250,6 @@ window.addEventListener("load", function () {
             return image.complete && image.naturalWidth > 0;
         }
 
-        //Physics
         const isPhoneControls = isMobileTiltDevice();
         const phoneTiltMultiplier = 3.2;
         const phoneGravityMultiplier = 1.9;
@@ -308,11 +278,9 @@ window.addEventListener("load", function () {
         let gameOver = false;
         let outOfBoundsFrames = 0;
         let paused = false;
-        let highScore = getStoredHighScore();
-        const previousHighScore = highScore;
+        let highScore = databaseHighScore || 0;
         const pauseButton = { x: gameWidth - 20 - 32, y: 14, width: 32, height: 36 };
 
-        //Prince
         class Prince {
             constructor() {
                 this.width = 54;
@@ -391,7 +359,6 @@ window.addEventListener("load", function () {
 
         let prince = new Prince();
 
-        //Platform
         class Platform {
             constructor(x, y, width = 80, height = 10) {
                 this.x = x;
@@ -422,7 +389,6 @@ window.addEventListener("load", function () {
             }
         }
 
-        //Background
         function drawBackground() {
             const skyHeight = gameHeight;
             const tileOverlap = 2;
@@ -431,12 +397,10 @@ window.addEventListener("load", function () {
                 return;
             }
 
-            // Start background only while visible
             if (cameraY < gameHeight && isImageRenderable(startBackground)) {
                 ctx.drawImage(startBackground, 0, cameraY, gameWidth, gameHeight);
             }
 
-            // Draw sky tiles forever above
             const tilesNeeded = Math.ceil((Math.abs(cameraY) + gameHeight) / skyHeight) + 2;
             const firstSkyY = cameraY - skyHeight;
 
@@ -448,7 +412,6 @@ window.addEventListener("load", function () {
             }
         }
 
-        //Game Setup
         let platforms = [];
         let lastJumpPlatform = null;
         let canScrollCamera = false;
@@ -470,7 +433,6 @@ window.addEventListener("load", function () {
         prince.previousY = prince.y;
         lastJumpPlatform = startPlatform;
 
-        //Helpers
         /**
          * Moves all platforms and camera down by a given amount.
          * @param {number} delta - Amount to move (float).
@@ -534,6 +496,25 @@ window.addEventListener("load", function () {
         }
 
         /**
+         * Adds hover effect on the pause button on the canvas.
+         * No parameters.
+         * No return value.
+         */
+        canvas.addEventListener('mousemove', function (event) {
+            const point = getCanvasPointFromEvent(event);
+
+            const insidePauseButton =
+                point.x >= pauseButton.x &&
+                point.x <= pauseButton.x + pauseButton.width &&
+                point.y >= pauseButton.y &&
+                point.y <= pauseButton.y + pauseButton.height;
+
+            canvas.style.cursor = insidePauseButton ? 'pointer' : 'default';
+        });
+
+
+
+        /**
          * Toggles the paused state of the game and shows/hides resume button.
          * No parameters.
          * No return value.
@@ -595,7 +576,7 @@ window.addEventListener("load", function () {
          * @param {boolean} isNewHighScore - True if new high score.
          * No return value.
          */
-        function drawFinalMessage(score, bestScore, isNewHighScore) {
+        function drawFinalMessage(score, bestScore) {
             ctx.save();
             ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
             ctx.fillRect(0, 0, gameWidth, gameHeight);
@@ -608,14 +589,9 @@ window.addEventListener("load", function () {
 
             ctx.font = '18px "Betania Patmos"';
             ctx.fillText('Game Over', gameWidth / 2, messageBaseY);
-
-            ctx.font = '18px "Betania Patmos"';
             ctx.fillText(`Final Score: ${score}`, gameWidth / 2, messageBaseY + 34);
             ctx.fillText(`Highest Score: ${bestScore}`, gameWidth / 2, messageBaseY + 62);
 
-            if (isNewHighScore) {
-                ctx.fillText('New High Score!', gameWidth / 2, messageBaseY + 90);
-            }
             ctx.restore();
         }
 
@@ -628,13 +604,22 @@ window.addEventListener("load", function () {
             gameOver = true;
             const finalScore = Math.floor(highestCameraY);
             highScore = Math.max(highScore, finalScore);
-            setStoredHighScore(highScore);
-            drawFinalMessage(finalScore, highScore, finalScore > previousHighScore);
+            drawFinalMessage(finalScore, highScore);
+
             if (resumeButton) resumeButton.style.display = 'none';
             if (playAgainButton) playAgainButton.style.display = 'flex';
+
+            if (leaderboardButton) {
+                leaderboardButton.style.display = "flex";
+
+                leaderboardButton.onclick = function () {
+                    window.location.href = "leaderboard.php?email="
+                        + encodeURIComponent(currentUserEmail) +
+                        "&score=" + encodeURIComponent(finalScore);
+                };
+            }
         }
 
-        //Game Loop
         /**
          * Main game loop. Updates game state and draws each frame.
          * No parameters.
@@ -739,13 +724,11 @@ window.addEventListener("load", function () {
 
         if (loadingScreen) loadingScreen.style.display = 'flex';
 
-        // Animate dots
         loadingInterval = setInterval(() => {
             dotCount = (dotCount + 1) % 4; // 0,1,2,3
             loadingText.textContent = 'Loading' + '.'.repeat(dotCount);
         }, 500);
 
-        //Start Game
         let imagesReady = 0;
         const totalImages = 4;
         let gameLoopStarted = false;
