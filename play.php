@@ -1,8 +1,9 @@
 <!--
 Author: Nozhin Azarpanah
-Date: March 14, 2026
+Date: March 29, 2026
 Server-side Assignment
 -->
+
 <?php
 $userEmail = filter_input(INPUT_GET, "email", FILTER_VALIDATE_EMAIL);
 if (!$userEmail) {

@@ -1,6 +1,6 @@
 <!--
 Author: Nozhin Azarpanah
-Date: March 14, 2026
+Date: March 29, 2026
 Server-side Assignment
 -->
 
@@ -41,7 +41,6 @@ try {
     die($e->getMessage());
 }
 
-/* only insert if score exists in URL */
 if ($userScore !== null && $userScore !== false) {
     $stmt = $dbh->prepare("INSERT INTO Results (email, score) VALUES (?, ?)");
     $stmt->execute([$userEmail, $userScore]);
@@ -63,18 +62,26 @@ $userStats = $stmt->fetch();
 
 $stmt = $dbh->prepare("
     SELECT 
-        email,
-        MAX(score) AS bestScore,
-        AVG(score) AS averageScore,
+        p.nickname,
+        r.email,
+        MAX(r.score) AS bestScore,
+        AVG(r.score) AS averageScore,
         COUNT(*) AS gamesPlayed
-    FROM Results
-    GROUP BY email
+    FROM Results r
+    JOIN Players p ON r.email = p.email
+    GROUP BY r.email, p.nickname
     ORDER BY bestScore DESC
     LIMIT 5
 ");
 $stmt->execute();
 $topUsers = $stmt->fetchAll();
+
+$stmt = $dbh->prepare("SELECT nickname FROM Players WHERE email = ?");
+$stmt->execute([$userEmail]);
+$userRow = $stmt->fetch();
+$userNickname = $userRow["nickname"];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +100,7 @@ $topUsers = $stmt->fetchAll();
             <p class="sectionTitle">Your Stats</p>
 
             <div class="userStats">
-                <p class="userEmail"><?php echo htmlspecialchars($userEmail); ?></p>
+                <p class="userNickname"><?php echo htmlspecialchars($userNickname); ?>
                 <p class="userInfo">
                     Games: <?php echo $userStats["gamesPlayed"]; ?> |
                     Avg: <?php echo round($userStats["averageScore"], 2); ?> |
@@ -108,8 +115,8 @@ $topUsers = $stmt->fetchAll();
             <div class="linkGroup">
                 <?php foreach ($topUsers as $index => $row): ?>
                     <div class="playerRow">
-                        <p class="playerEmail">
-                            <?php echo $index + 1; ?>. <?php echo htmlspecialchars($row["email"]); ?>
+                        <p class="playerNickname">
+                            <?php echo htmlspecialchars($row["nickname"]); ?>
                         </p>
                         <p class="playerInfo">
                             Best: <?php echo $row["bestScore"]; ?> |

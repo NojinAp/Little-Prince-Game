@@ -1,6 +1,6 @@
 /*
 Author: Nozhin Azarpanah
-Date: March 14, 2026
+Date: March 29, 2026
 Server-side Assignment
 */
 
@@ -159,7 +159,8 @@ canvas {
 }
 
 #playAgainButton,
-#resumeButton, #leaderboardButton {
+#resumeButton,
+#leaderboardButton {
   font-family: "Betania Patmos", cursive;
   font-size: 18px;
   border-radius: 999px;
@@ -199,14 +200,16 @@ canvas {
 }
 
 #playAgainButton:hover,
-#resumeButton:hover, #leaderboardButton:hover {
+#resumeButton:hover,
+#leaderboardButton:hover {
   transform: translate(-50%, calc(-50% - 2px));
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
   filter: brightness(1.05);
 }
 
 #playAgainButton:active,
-#resumeButton:active, #leaderboardButton:active {
+#resumeButton:active,
+#leaderboardButton:active {
   transform: translate(-50%, calc(-50% + 1px)) scale(0.98);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
@@ -318,6 +321,60 @@ canvas {
   transform: scale(0.98);
 }
 
+#nicknameForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#nicknameForm label {
+  font-size: 16px;
+  color: white;
+}
+
+#nicknameForm input {
+  width: 220px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  padding: 0 14px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  background-color: rgb(15, 15, 31);
+  color: rgb(255, 197, 104);
+  box-shadow: 0 6px 12px rgba(255, 197, 104, 0.3);
+  outline: none;
+}
+
+#nicknameForm button {
+  font-family: "Betania Patmos", cursive;
+  width: 140px;
+  height: 38px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: rgb(15, 15, 31);
+  color: rgb(255, 197, 104);
+  box-shadow: 0 10px 18px rgb(255, 197, 104);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+#nicknameForm button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.05);
+}
+
+#nicknameForm button:active {
+  transform: scale(0.98);
+}
+
 #error {
   color: #ff6b6b;
   font-size: 14px;
@@ -342,8 +399,8 @@ canvas {
   color: rgb(255, 197, 104);
   text-align: center;
   box-sizing: border-box;
-  gap: 10px;          
-  padding: 24px 16px;  
+  gap: 10px;
+  padding: 24px 16px;
 }
 
 #messagePage h2 {
@@ -368,7 +425,7 @@ canvas {
   font-family: "Betania Patmos", cursive;
   font-size: 18px;
   padding: 10px 20px;
-  min-width: 290px; 
+  min-width: 290px;
   height: 44px;
   border-radius: 999px;
   border: none;
@@ -408,7 +465,7 @@ canvas {
   align-items: center;
 }
 
-.userEmail {
+.userNickname {
   font-size: 18px;
   font-weight: bold;
   color: white;
@@ -428,7 +485,7 @@ canvas {
   gap: 2px;
 }
 
-.playerEmail {
+.playerNickname {
   margin: 0;
   font-size: 16px;
   color: white;
@@ -445,19 +502,23 @@ canvas {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  margin-bottom: 40px; 
+  margin-bottom: 40px;
 }
 
 .sectionTitle {
   font-size: 20px;
-  margin: 0;          
+  margin: 0;
   color: rgb(255, 197, 104);
 }
 
 #formContainer input:-webkit-autofill,
 #formContainer input:-webkit-autofill:hover,
 #formContainer input:-webkit-autofill:focus,
-#formContainer input:-webkit-autofill:active {
+#formContainer input:-webkit-autofill:active,
+#nicknameForm input:-webkit-autofill,
+#nicknameForm input:-webkit-autofill:hover,
+#nicknameForm input:-webkit-autofill:focus,
+#nicknameForm input:-webkit-autofill:active {
   -webkit-text-fill-color: rgb(255, 197, 104) !important;
   -webkit-box-shadow:
     0 0 0 1000px rgb(15, 15, 31) inset,
@@ -473,7 +534,7 @@ canvas {
 @media (hover: none) and (pointer: coarse) {
 
   #playAgainButton,
-  #resumeButton, 
+  #resumeButton,
   #leaderboardButton,
   #formContainer button,
   #messagePage a,

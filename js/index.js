@@ -1,6 +1,6 @@
 /*
 Author: Nozhin Azarpanah
-Date: March 14, 2026
+Date: March 29, 2026
 Server-side Assignment
 */
 
@@ -8,6 +8,7 @@ window.addEventListener("load", function () {
     const form = document.querySelector("form");
     const emailInput = document.getElementById("email");
     const birthdayInput = document.getElementById("birthday");
+    const nicknameInput = document.getElementById("nickname");
     const error = document.getElementById("error");
 
     function validateEmail(email) {
@@ -36,30 +37,41 @@ window.addEventListener("load", function () {
         return true;
     }
 
-    form.addEventListener("submit", function (event) {
-        const email = emailInput.value.trim();
-        const birthday = birthdayInput.value;
+    function validateNickname(nickname) {
+        return nickname.trim() !== "";
+    }
 
-        if (email === "") {
+    form.addEventListener("submit", function (event) {
+        const email = emailInput ? emailInput.value.trim() : "";
+        const birthday = birthdayInput ? birthdayInput.value : "";
+        const nickname = nicknameInput ? nicknameInput.value.trim() : "";
+
+        if (emailInput && email === "") {
             error.textContent = "Please enter your email address.";
             event.preventDefault();
             return;
         }
 
-        if (birthday === "") {
+        if (birthdayInput && birthday === "") {
             error.textContent = "Please enter your birthday.";
             event.preventDefault();
             return;
         }
 
-        if (!validateEmail(email)) {
+        if (emailInput && !validateEmail(email)) {
             error.textContent = "Enter a valid email like a@b.c";
             event.preventDefault();
             return;
         }
 
-        if (!validateBirthday(birthday)) {
+        if (birthdayInput && !validateBirthday(birthday)) {
             error.textContent = "Enter a valid birthday.";
+            event.preventDefault();
+            return;
+        }
+
+        if (nicknameInput && !validateNickname(nickname)) {
+            error.textContent = "Please enter your nickname.";
             event.preventDefault();
             return;
         }
