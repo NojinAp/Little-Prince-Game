@@ -1,11 +1,10 @@
 /*
 Author: Nozhin Azarpanah
-Date: March 29, 2026
-Server-side Assignment
+Date: March 14, 2026
+JS Individual Assignment
 */
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -14,8 +13,8 @@ body {
   max-height: 100%;
 }
 
-#startPage {
-  background-image: url("../images/opening.jpg");
+#startPage{
+  background-image:url("../images/opening.jpg");
   width: min(100vw, calc((100dvh - 40px) * 2 / 3));
   height: min(calc(100dvh - 40px), calc(100vw * 3 / 2));
   aspect-ratio: 2 / 3;
@@ -31,7 +30,7 @@ body {
   top: 10%;
   transform: translate(-50%, -50%);
   margin: 0;
-  font-family: "Betania Patmos", cursive;
+  font-family:"Betania Patmos", cursive;
   font-size: 36px;
   color: white;
   text-align: center;
@@ -39,8 +38,8 @@ body {
 }
 
 #startButton {
-  font-family: "Betania Patmos", cursive;
-  font-size: 18px;
+  font-family:"Betania Patmos", cursive;
+  font-size:18px;
   width: 190px;
   height: 44px;
   border-radius: 999px;
@@ -57,7 +56,7 @@ body {
   box-sizing: border-box;
   cursor: pointer;
   background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
+  color:rgb(255, 197, 104);
   box-shadow: 0 10px 18px rgb(255, 197, 104);
   opacity: 0;
   pointer-events: none;
@@ -136,6 +135,19 @@ body {
   margin-bottom: 0;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  #startButton {
+    transition: none;
+  }
+
+  #startButton:hover,
+  #startButton:active {
+    transform: translate(-50%, -50%);
+    box-shadow: 0 10px 18px rgb(255, 197, 104);
+    filter: none;
+  }
+}
+
 body {
   background-color: black;
   width: 100vw;
@@ -159,10 +171,9 @@ canvas {
 }
 
 #playAgainButton,
-#resumeButton,
-#leaderboardButton {
-  font-family: "Betania Patmos", cursive;
-  font-size: 18px;
+#resumeButton {
+  font-family:"Betania Patmos", cursive;
+  font-size:18px;
   border-radius: 999px;
   border: none;
   position: fixed;
@@ -176,7 +187,7 @@ canvas {
   box-sizing: border-box;
   cursor: pointer;
   background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
+  color:rgb(255, 197, 104);
   box-shadow: 0 10px 18px rgb(255, 197, 104);
   transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
   z-index: 20;
@@ -187,29 +198,21 @@ canvas {
   height: 44px;
 }
 
-#leaderboardButton {
-  top: calc(50% + 80px);
-  width: 290px;
-  height: 44px;
-}
-
 #resumeButton {
   width: 190px;
   height: 44px;
-  font-size: 18px;
+  font-size:18px;
 }
 
 #playAgainButton:hover,
-#resumeButton:hover,
-#leaderboardButton:hover {
+#resumeButton:hover {
   transform: translate(-50%, calc(-50% - 2px));
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
   filter: brightness(1.05);
 }
 
 #playAgainButton:active,
-#resumeButton:active,
-#leaderboardButton:active {
+#resumeButton:active {
   transform: translate(-50%, calc(-50% + 1px)) scale(0.98);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
@@ -223,353 +226,26 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0,0,0,0.85);
   color: rgb(255, 197, 104);
   font-family: "Betania Patmos", cursive;
   font-size: 28px;
   z-index: 50;
 }
 
-#formContainer {
-  position: relative;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-    url("../images/opening.jpg");
-  width: min(100vw, calc((100dvh - 40px) * 2 / 3));
-  height: min(calc(100dvh - 40px), calc(100vw * 3 / 2));
-  aspect-ratio: 2 / 3;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  font-family: "Betania Patmos", cursive;
-  color: rgb(255, 197, 104);
-}
-
-#formContainer form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.title {
-  position: absolute;
-  left: 50%;
-  top: 10%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  font-family: "Betania Patmos", cursive;
-  font-size: 36px;
-  color: white;
-  text-align: center;
-  white-space: nowrap;
-}
-
-#formContainer label {
-  font-size: 16px;
-  color: white;
-}
-
-#formContainer input {
-  width: 220px;
-  height: 40px;
-  border-radius: 999px;
-  border: none;
-  padding: 0 14px;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 16px;
-  background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
-  box-shadow: 0 6px 12px rgba(255, 197, 104, 0.3);
-  outline: none;
-}
-
-#formContainer input:focus {
-  box-shadow: 0 0 12px rgb(255, 197, 104);
-}
-
-#formContainer button {
-  font-family: "Betania Patmos", cursive;
-  width: 140px;
-  height: 38px;
-  margin-top: 10px;
-  font-size: 16px;
-  border-radius: 999px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
-  box-shadow: 0 10px 18px rgb(255, 197, 104);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
-}
-
-#formContainer button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
-  filter: brightness(1.05);
-}
-
-#formContainer button:active {
-  transform: scale(0.98);
-}
-
-#nicknameForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-#nicknameForm label {
-  font-size: 16px;
-  color: white;
-}
-
-#nicknameForm input {
-  width: 220px;
-  height: 40px;
-  border-radius: 999px;
-  border: none;
-  padding: 0 14px;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 16px;
-  background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
-  box-shadow: 0 6px 12px rgba(255, 197, 104, 0.3);
-  outline: none;
-}
-
-#nicknameForm button {
-  font-family: "Betania Patmos", cursive;
-  width: 140px;
-  height: 38px;
-  margin-top: 10px;
-  font-size: 16px;
-  border-radius: 999px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
-  box-shadow: 0 10px 18px rgb(255, 197, 104);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
-}
-
-#nicknameForm button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
-  filter: brightness(1.05);
-}
-
-#nicknameForm button:active {
-  transform: scale(0.98);
-}
-
-#error {
-  color: #ff6b6b;
-  font-size: 14px;
-}
-
-#messagePage {
-  position: relative;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-    url("../images/opening.jpg");
-  width: min(100vw, calc((100dvh - 40px) * 2 / 3));
-  height: min(calc(100dvh - 40px), calc(100vw * 3 / 2));
-  aspect-ratio: 2 / 3;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: "Betania Patmos", cursive;
-  color: rgb(255, 197, 104);
-  text-align: center;
-  box-sizing: border-box;
-  gap: 10px;
-  padding: 24px 16px;
-}
-
-#messagePage h2 {
-  position: absolute;
-  left: 50%;
-  top: 10%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  font-size: 36px;
-  color: white;
-  white-space: nowrap;
-}
-
-#messageText {
-  font-size: 24px;
-  line-height: 1.4;
-  max-width: 280px;
-  color: rgb(255, 197, 104);
-}
-
-#messagePage a {
-  font-family: "Betania Patmos", cursive;
-  padding: 10px 20px;
-  min-width: clamp(180px, 65vw, 260px);
-  height: clamp(38px, 5.5vh, 44px);
-  font-size: clamp(14px, 3.5vw, 17px);
-  border-radius: 999px;
-  border: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-  background-color: rgb(15, 15, 31);
-  color: rgb(255, 197, 104);
-  box-shadow: 0 10px 18px rgb(255, 197, 104);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
-}
-
-#messagePage a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
-  filter: brightness(1.05);
-}
-
-#messagePage a:active {
-  transform: scale(0.98);
-}
-
-#messagePage a.beginBtn {
-  width: 140px;
-  min-width: 140px;
-  height: 38px;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-.linkGroup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 3vw, 24px);
-}
-
-.userStats {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: center;
-}
-
-.userNickname {
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin: 0;
-}
-
-.userInfo {
-  font-size: 14px;
-  margin: 0;
-  color: rgb(255, 197, 104);
-}
-
-.playerRow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-}
-
-.playerNickname {
-  margin: 0;
-  font-size: 16px;
-  color: white;
-}
-
-.playerInfo {
-  margin: 0;
-  font-size: 13px;
-  color: rgb(255, 197, 104);
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: clamp(16px, 4vw, 40px);
-}
-
-.sectionTitle {
-  font-size: 20px;
-  margin: 0;
-  color: rgb(255, 197, 104);
-}
-
-#formContainer input:-webkit-autofill,
-#formContainer input:-webkit-autofill:hover,
-#formContainer input:-webkit-autofill:focus,
-#formContainer input:-webkit-autofill:active,
-#nicknameForm input:-webkit-autofill,
-#nicknameForm input:-webkit-autofill:hover,
-#nicknameForm input:-webkit-autofill:focus,
-#nicknameForm input:-webkit-autofill:active {
-  -webkit-text-fill-color: rgb(255, 197, 104) !important;
-  -webkit-box-shadow: 0 0 0 1000px rgb(15, 15, 31) inset !important;
-  box-shadow: 0 0 0 1000px rgb(15, 15, 31) inset !important;
-  caret-color: rgb(255, 197, 104);
-  border-radius: 999px;
-  transition: background-color 9999s ease-out 0s;
-}
-
 @media (hover: none) and (pointer: coarse) {
-
   #playAgainButton,
-  #resumeButton,
-  #leaderboardButton,
-  #formContainer button,
-  #messagePage a,
-  #startButton {
+  #resumeButton {
     transition: none;
   }
 
   #playAgainButton:hover,
   #playAgainButton:active,
   #resumeButton:hover,
-  #resumeButton:active,
-  #leaderboardButton:hover,
-  #leaderboardButton:active {
+  #resumeButton:active {
     transform: translate(-50%, -50%);
-  }
-
-  #startButton:hover,
-  #startButton:active {
-    transform: translate(-50%, -50%);
-  }
-
-  #formContainer button:hover,
-  #formContainer button:active,
-  #messagePage a:hover,
-  #messagePage a:active {
-    transform: none;
-  }
-
-  #formContainer input,
-  #nicknameForm input {
-    box-shadow: none;
+    box-shadow: 0 10px 18px rgb(255, 197, 104);
+    filter: none;
   }
 }
 
